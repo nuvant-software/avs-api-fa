@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+# ✅ Vereist voor Azure login via OIDC
+permissions:
+  id-token: write
+  contents: read
+
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './dist'
   NODE_VERSION: '20'
@@ -15,24 +20,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 🧰 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: Compile TypeScript
+      - name: 🔨 Compile TypeScript
         run: npm run build
 
-      - name: Copy host.json
+      - name: 📁 Copy host.json to dist
         run: cp host.json dist/
 
-      - name: Upload artifact
+      - name: 📤 Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -43,20 +48,20 @@ jobs:
     needs: build
 
     steps:
-      - name: Download artifact
+      - name: 📥 Download dist artifact
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
-      - name: Login to Azure
+      - name: 🔐 Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_18D77B80E3FD4D8B8DD898C37C814484 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_40458CE2190A4DD2A5F2DFBF2115049E }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_821395FDFB844F72ACE561E7C4263F3D }}
 
-      - name: Deploy to Azure Functions
+      - name: 🚀 Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
           app-name: 'avs-api-fa'
