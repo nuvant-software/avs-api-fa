@@ -8,7 +8,7 @@
     "watch": "tsc -w",
     "clean": "rimraf dist",
     "prestart": "rimraf dist && tsc && copyfiles host.json dist",
-    "start": "func start",
+    "start": "npm run start",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
