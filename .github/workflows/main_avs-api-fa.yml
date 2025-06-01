@@ -75,11 +75,12 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_345AC3E3D83341338A29C088EF4BDB1B }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_ED03FEB5990445CB9D1BE4DDC96B90D3 }}
 
-      - name: 'Deploy to Azure Functions'
+      - name: 'Deploy to Azure Functions (auto build)'
         uses: Azure/functions-action@v1
-        id: deploy-to-function
         with:
           app-name: 'avs-api-fa'
           slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: '.'
+          scm-do-build-during-deployment: true
+
           
